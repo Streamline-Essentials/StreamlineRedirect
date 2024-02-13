@@ -1,0 +1,6 @@
+redirects:
+  lobby:
+    from:
+      - SERVER1
+    to:
+      - LOBBY
