@@ -1,8 +1,9 @@
 package host.plas.events;
 
-import net.streamline.api.events.server.KickedFromServerEvent;
-import net.streamline.api.savables.users.StreamlinePlayer;
 import host.plas.StreamlineRedirect;
+import host.plas.managers.PlayerManager;
+import singularity.data.console.CosmicSender;
+import singularity.events.server.KickedFromServerEvent;
 import tv.quaint.events.BaseEventHandler;
 import tv.quaint.events.BaseEventListener;
 import tv.quaint.events.processing.BaseProcessor;
@@ -15,7 +16,7 @@ public class MainListener implements BaseEventListener {
 
     @BaseProcessor
     public void onKick(KickedFromServerEvent event) {
-        StreamlinePlayer player = event.getPlayer();
+        CosmicSender player = event.getSender();
         if (player == null) return;
 
         String fromServer = event.getFromServer();
@@ -24,15 +25,19 @@ public class MainListener implements BaseEventListener {
             StreamlineRedirect.getMainConfig().getRedirects().forEach(configuredRedirect -> {
                 if (configuredRedirect.getFromServers().contains(fromServer)) {
                     if (! configuredRedirect.getToServers().isEmpty()) {
-                        String toServer = configuredRedirect.getToServers().get(0);
-                        event.setToServer(toServer); // TODO: Add a way to check if a server is online.
-                        StreamlineRedirect.getInstance().logDebug("Setting the toServer to " + toServer + " for player " + player.getName() + "!");
+                        if (PlayerManager.tickPlayer(player, true)) {
+                            event.setCancelled(true);
+                        } else {
+                            String toServer = configuredRedirect.getToServers().get(0);
+                            event.setToServer(toServer); // TODO: Add a way to check if a server is online.
+                        }
+                    } else {
+                        PlayerManager.removePlayer(player);
                     }
                 }
             });
-            StreamlineRedirect.getInstance().logDebug("Event's toServer is " + event.getToServer() + " for player " + player.getName() + "!");
         } else {
-            StreamlineRedirect.getInstance().logDebug("Player " + player.getName() + " was kicked from the network!");
+            PlayerManager.removePlayer(player);
         }
     }
 }

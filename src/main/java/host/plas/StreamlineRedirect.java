@@ -2,10 +2,10 @@ package host.plas;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.streamline.api.modules.SimpleModule;
-import net.streamline.thebase.lib.pf4j.PluginWrapper;
+import singularity.modules.SimpleModule;
 import host.plas.configs.MainConfig;
 import host.plas.events.MainListener;
+import org.pf4j.PluginWrapper;
 
 public class StreamlineRedirect extends SimpleModule {
     @Getter @Setter

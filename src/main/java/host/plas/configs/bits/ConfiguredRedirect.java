@@ -7,12 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+@Setter
+@Getter
 public class ConfiguredRedirect implements Comparable<ConfiguredRedirect> {
-    @Getter @Setter
     private String identifier;
-    @Getter @Setter
     private ConcurrentSkipListSet<String> fromServers;
-    @Getter @Setter
     private List<String> toServers;
 
     public ConfiguredRedirect(String identifier, ConcurrentSkipListSet<String> fromServers, List<String> toServers) {

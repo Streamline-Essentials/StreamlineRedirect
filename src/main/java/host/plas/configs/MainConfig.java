@@ -14,10 +14,13 @@ public class MainConfig extends SimpleConfiguration {
 
     @Override
     public void init() {
-
+        getRedirects();
+        getMaxRedirects();
     }
 
     public ConcurrentSkipListSet<ConfiguredRedirect> getRedirects() {
+        reloadResource();
+
         ConcurrentSkipListSet<ConfiguredRedirect> redirects = new ConcurrentSkipListSet<>();
 
         getResource().singleLayerKeySet("redirects").forEach(key -> {
@@ -30,5 +33,11 @@ public class MainConfig extends SimpleConfiguration {
         });
 
         return redirects;
+    }
+
+    public int getMaxRedirects() {
+        reloadResource();
+
+        return getResource().getOrSetDefault("max-redirects", 5);
     }
 }
